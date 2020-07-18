@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1044122740093",
+    "firebase_url": "https://studyblog-6c6ac.firebaseio.com",
+    "project_id": "studyblog-6c6ac",
+    "storage_bucket": "studyblog-6c6ac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1044122740093:android:426b0d213f004eb0455814",
+        "android_client_info": {
+          "package_name": "com.upanshu.studyblog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1044122740093-j4f1883ap91bc6ttjunu4826rk7asurk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.upanshu.studyblog",
+            "certificate_hash": "574d8e46740195584096aa9515fa00f14d8b7b5b"
+          }
+        },
+        {
+          "client_id": "1044122740093-gb516n143n1q5upk1sdm5vu019nbbb4m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgUmx2VNK21RrHBdiS04qxQunj1-bPd6k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1044122740093-gb516n143n1q5upk1sdm5vu019nbbb4m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
