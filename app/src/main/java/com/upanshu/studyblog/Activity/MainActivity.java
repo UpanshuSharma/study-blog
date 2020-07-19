@@ -1,11 +1,15 @@
 package com.upanshu.studyblog.Activity;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -26,6 +30,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -36,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     FirebaseAuth mAuth;
 
+    Dialog popAddPost;
+    ImageView popUpUserImage,popupPostImage,popUpAddBtn;
+    EditText popUpTitle,popUpDescription;
+    ProgressBar popUpProgressBar;
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
@@ -51,12 +62,16 @@ public class MainActivity extends AppCompatActivity {
 
         //.........................
 
+        /*Getting the PopUp Window*/
+        iniPop();
+        setupPopupImageClick();
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                popAddPost.show();
+
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -76,6 +91,38 @@ public class MainActivity extends AppCompatActivity {
 
         updateNavHeader();
     }
+
+    private void setupPopupImageClick() {
+    }
+
+    /* Getting the Popup Window*/
+    //............................................................
+    private void iniPop(){
+        popAddPost=new Dialog(this);
+        popAddPost.setContentView(R.layout.pop_add_post);
+        popAddPost.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popAddPost.getWindow().setLayout(Toolbar.LayoutParams.MATCH_PARENT,Toolbar.LayoutParams.WRAP_CONTENT);
+        popAddPost.getWindow().getAttributes().gravity= Gravity.TOP;
+
+        popUpUserImage=popAddPost.findViewById(R.id.popup_user_pic);
+        popUpTitle=popAddPost.findViewById(R.id.editText);
+        popupPostImage=popAddPost.findViewById(R.id.popup_user_post_pic);
+        popUpDescription=popAddPost.findViewById(R.id.editText2);
+        popUpProgressBar=popAddPost.findViewById(R.id.popup_progressBar);
+        popUpAddBtn=popAddPost.findViewById(R.id.popup_user_pic);
+
+        //popUpAddBtn ClickListner
+        popUpAddBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popUpAddBtn.setVisibility(View.INVISIBLE);
+                popUpProgressBar.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+    }
+    //.................................................................
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
