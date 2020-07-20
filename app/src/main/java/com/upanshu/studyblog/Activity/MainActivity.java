@@ -1,9 +1,14 @@
 package com.upanshu.studyblog.Activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -13,6 +18,9 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -34,6 +42,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -44,10 +53,16 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
 
     Dialog popAddPost;
-    ImageView popUpUserImage,popupPostImage,popUpAddBtn;
+    ImageView popupPostImage,popUpAddBtn;
+     CircleImageView popUpUserImage;
     EditText popUpTitle,popUpDescription;
     ProgressBar popUpProgressBar;
+
+    static  int reqCode=2;
+    static int REQUESTCODE=2;
+
     private AppBarConfiguration mAppBarConfiguration;
+    private Uri imageUri=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +108,67 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupPopupImageClick() {
+
+        popupPostImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //open Gallery
+
+                    CheckAndRequestForPermission();
+
+
+
+            }
+        });
+
+    }
+
+
+    private void OpenGallery() {
+        Intent galleryIntent= new Intent(Intent.ACTION_GET_CONTENT);
+        galleryIntent.setType("image/*");
+        startActivityForResult(galleryIntent,REQUESTCODE);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK && requestCode==REQUESTCODE && data!=null){
+            imageUri=data.getData();
+             popupPostImage.setImageURI(imageUri);
+
+
+
+
+        }
+        else{
+            Toast.makeText(this, "Error !!  Try Again", Toast.LENGTH_SHORT).show();
+            startActivity (new Intent(MainActivity.this,RegisterActivity.class));
+            finish();
+        }
+    }
+
+    private void CheckAndRequestForPermission() {
+
+
+        if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+
+            if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)){
+                Toast.makeText(this, " Please accept  for required Permission", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},reqCode);
+
+            }
+
+        }
+        else{
+            OpenGallery();
+        }
+
+
+
     }
 
     /* Getting the Popup Window*/
@@ -111,12 +187,26 @@ public class MainActivity extends AppCompatActivity {
         popUpProgressBar=popAddPost.findViewById(R.id.popup_progressBar);
         popUpAddBtn=popAddPost.findViewById(R.id.popup_user_pic);
 
+        Picasso.get().load(currentUser.getPhotoUrl()).placeholder(R.drawable.profilelogo1).into(popUpUserImage);
+
+
         //popUpAddBtn ClickListner
         popUpAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 popUpAddBtn.setVisibility(View.INVISIBLE);
                 popUpProgressBar.setVisibility(View.VISIBLE);
+
+                if( !popUpTitle.getText().equals("") && !popUpDescription.getText().equals("")
+                && imageUri !=null){
+                    //Working well everything add it this post firebase
+
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Please provides Title, description or PostImage", Toast.LENGTH_SHORT).show();
+                    popUpProgressBar.setVisibility(View.INVISIBLE);
+                    popUpAddBtn.setVisibility(View.VISIBLE);
+                }
             }
         });
 
